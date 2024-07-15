@@ -1,13 +1,29 @@
 import React from 'react'
 import { useEffect,useState } from 'react'
+import { FaSearch } from 'react-icons/fa';
+import "./FetchApi.css"
 const FetchApi = () =>{
     const [records,setRecords] = useState([]);
     const [search, setSearch] = useState('');
 
     useEffect(()=>{
+        
         fetch('https://jsonplaceholder.typicode.com/users')
-        .then(response => response.json())
-        .then(data => setRecords(data))
+        .then(response => {
+            if(!response.ok){
+                console.log("API's response is not working")
+            }
+            return response.json()
+        })
+        .then(data=>{
+
+            if(data.length === 0){
+                console.log("No data")
+            }
+            else{
+                setRecords(data);
+            }
+        })
         
         .catch(err => console.log(err))
     },[])
@@ -26,12 +42,16 @@ const FetchApi = () =>{
   return (
     <div>
          <h2>User Records</h2>
+         <div className='input-wrapper'>
+            <FaSearch id="search-icon"/>
          <input
             onChange={handleChange}
             type="search"
             placeholder="Search..."
             value={search}
         />
+         </div>
+         {records.length===0 ? (<p>No data in api</p>):(
 
          <table>
             
@@ -46,7 +66,7 @@ const FetchApi = () =>{
             </thead>
 
             <tbody>
-            {filteredRecords.map((item, index) => (
+            {filteredRecords.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
@@ -57,9 +77,10 @@ const FetchApi = () =>{
                     ))}
             </tbody>
          </table>
-       
+         )}
         
     </div>
+    
   )
 }
 
