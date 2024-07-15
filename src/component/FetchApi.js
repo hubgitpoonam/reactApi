@@ -34,6 +34,22 @@ const FetchApi = () =>{
       };
 
     
+    const ascendingEvent = () =>{
+        let data =[...filteredRecords]
+        if(data.length>0){
+            let result = data.sort((a,b) => a.name.localeCompare(b.name))
+            setRecords(result)
+        }
+    }
+
+    const descendingEvent = () =>{
+        let data =[...filteredRecords]
+        if(data.length>0){
+            let result = data.sort((a,b) => b.name.localeCompare(a.name))
+            setRecords(result)
+        }
+    }
+    
     const filteredRecords = records.filter(i =>
         i.name.toLowerCase().includes(search.toLowerCase()) ||
         i.id.toString().includes(search.toLowerCase())
@@ -66,7 +82,9 @@ const FetchApi = () =>{
             </thead>
 
             <tbody className='table-body'>
-            {filteredRecords.map((item) => (
+            {filteredRecords && filteredRecords.length>0 && filteredRecords !== undefined ? filteredRecords
+            //.sort((a,b)=>a.id>b.id ? 1:-1)
+            .map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
@@ -74,11 +92,18 @@ const FetchApi = () =>{
                             <td>{item.address.zipcode}</td>
                             <td>{item.company.name}</td>
                         </tr>
-                    ))}
+                    )):"No data"}
             </tbody>
          </table>
          )}
-        
+
+
+        <button onClick={ascendingEvent}>Sort Ascending</button>
+        <button onClick={descendingEvent}>Sort Descending</button>
+
+
+
+
     </div>
     
   )
