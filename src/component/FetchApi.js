@@ -8,13 +8,20 @@ const FetchApi = () =>{
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
         .then(data => setRecords(data))
+        
         .catch(err => console.log(err))
     },[])
 
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         setSearch(e.target.value);
       };
+
+    
+    const filteredRecords = records.filter(i =>
+        i.name.toLowerCase().includes(search.toLowerCase()) ||
+        i.id.toString().includes(search.toLowerCase())
+    );
     
   return (
     <div>
@@ -39,7 +46,7 @@ const FetchApi = () =>{
             </thead>
 
             <tbody>
-            {records.map((item, index) => (
+            {filteredRecords.map((item, index) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
