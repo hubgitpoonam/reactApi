@@ -87,10 +87,10 @@ const FetchApi = () =>{
             .map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>{item.address.city}</td>
-                            <td>{item.address.zipcode}</td>
-                            <td>{item.company.name}</td>
+                            <td>{item.name ? item.name : '-'}</td>
+                            <td>{item.address.city ? item.address.city:'-'}</td>
+                            <td>{item.address.zipcode ? item.address.zipcode:'-'}</td>
+                            <td>{item.company.name ? item.company.name:'-'}</td>
                         </tr>
                     )):"No data"}
             </tbody>
