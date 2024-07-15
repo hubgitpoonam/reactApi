@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect,useState } from 'react'
 const FetchApi = () =>{
     const [records,setRecords] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(()=>{
         fetch('https://jsonplaceholder.typicode.com/users')
@@ -10,15 +11,29 @@ const FetchApi = () =>{
         .catch(err => console.log(err))
     },[])
 
+
+    const handleChange = e => {
+        setSearch(e.target.value);
+      };
+    
   return (
     <div>
          <h2>User Records</h2>
+         <input
+            onChange={handleChange}
+            type="search"
+            placeholder="Search..."
+            value={search}
+        />
+
          <table>
+            
             <thead>
                  <tr>
                     <th>Id</th>
                     <th>Name</th>
-                    <th>Email</th>
+                    <th>City</th>
+                    <th>Zipcode</th>
                     <th>Company</th>
                 </tr>
             </thead>
@@ -28,21 +43,14 @@ const FetchApi = () =>{
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
-                            <td>{item.email}</td>
+                            <td>{item.address.city}</td>
+                            <td>{item.address.zipcode}</td>
                             <td>{item.company.name}</td>
                         </tr>
                     ))}
             </tbody>
          </table>
-        {/* <ul>
-            {records.map((item,index)=>(
-                <li key={index}>
-                    {item.id} |{item.name}
-                    
-                </li>
-            ))}
-        </ul> */}
-
+       
         
     </div>
   )
