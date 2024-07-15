@@ -53,10 +53,10 @@ const FetchApi = () =>{
          </div>
          {records.length===0 ? (<p>No data in api</p>):(
 
-         <table>
+         <table className="tables">
             
             <thead>
-                 <tr>
+                 <tr className='row'>
                     <th>Id</th>
                     <th>Name</th>
                     <th>City</th>
@@ -65,7 +65,7 @@ const FetchApi = () =>{
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody className='table-body'>
             {filteredRecords.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
