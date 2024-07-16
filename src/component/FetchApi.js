@@ -5,6 +5,7 @@ import "./FetchApi.css"
 const FetchApi = () =>{
     const [records,setRecords] = useState([]);
     const [search, setSearch] = useState('');
+    const [sortDirection, setSortDirection] = useState(0);
 
     useEffect(()=>{
         
@@ -31,13 +32,28 @@ const FetchApi = () =>{
 
     const handleChange = (e) => {
         setSearch(e.target.value);
+        
       };
 
+      const handleSortChange = (e) => {
+        setSortDirection(e.target.value);
+         const sortDirection=setSortDirection(e.target.value);
+        const sortId = [...filteredRecords]; 
+
+        sortId.sort((a, b) => {
+        return sortDirection === "0" ? a.id - b.id : b.id - a.id;
+        });
+        setRecords(sortId);
+        
+      };
+
+    
     
     const ascendingEvent = () =>{
         let data =[...filteredRecords]
         if(data.length>0){
             let result = data.sort((a,b) => a.name.localeCompare(b.name))
+            
             setRecords(result)
         }
     }
@@ -46,6 +62,7 @@ const FetchApi = () =>{
         let data =[...filteredRecords]
         if(data.length>0){
             let result = data.sort((a,b) => b.name.localeCompare(a.name))
+            
             setRecords(result)
         }
     }
@@ -82,6 +99,10 @@ const FetchApi = () =>{
             </thead>
 
             <tbody className='table-body'>
+            <select defaultValue={sortDirection} onChange={handleSortChange}>
+            <option value={0}>Asscending</option>
+            <option value={1}>Descending</option>
+            </select>
             {filteredRecords && filteredRecords.length>0 && filteredRecords !== undefined ? filteredRecords
             //.sort((a,b)=>a.id>b.id ? 1:-1)
             .map((item) => (
