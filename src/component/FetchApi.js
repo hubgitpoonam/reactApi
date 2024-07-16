@@ -1,12 +1,19 @@
 import React from 'react'
 import { useEffect,useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
-import "./FetchApi.css"
+import "./FetchApi.css";
+
+ 
+
 const FetchApi = () =>{
     const [records,setRecords] = useState([]);
     const [search, setSearch] = useState('');
     const [sortDirection, setSortDirection] = useState(0);
-
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+   
+    
     useEffect(()=>{
         
         fetch('https://jsonplaceholder.typicode.com/users')
@@ -35,9 +42,16 @@ const FetchApi = () =>{
         
       };
 
+
+    //Date 
+    const getDateFromID = (id) => {
+        const day = id.toString(); 
+        return `${month}-${day}-${year}`;
+    };
+
       const handleSortChange = (e) => {
         setSortDirection(e.target.value);
-         const sortDirection=setSortDirection(e.target.value);
+        const sortDirection=setSortDirection(e.target.value);
         const sortId = [...filteredRecords]; 
 
         sortId.sort((a, b) => {
@@ -47,6 +61,18 @@ const FetchApi = () =>{
         
       };
 
+      const ascendingId = (e) => {
+        setSortDirection(e.target.value);
+        const sortDirection=setSortDirection(e.target.value);
+        const sortId = [...filteredRecords]; 
+
+        sortId.sort((a, b) => {
+        return sortDirection === "0" ? b.id - a.id : a.id - b.id;
+        });
+        setRecords(sortId);
+
+        
+      };
     
     
     const ascendingEvent = () =>{
@@ -67,10 +93,20 @@ const FetchApi = () =>{
         }
     }
     
-    const filteredRecords = records.filter(i =>
-        i.name.toLowerCase().includes(search.toLowerCase()) ||
-        i.id.toString().includes(search.toLowerCase())
-    );
+    const filteredRecords = records.filter(i =>{
+        
+        const formattedDate = getDateFromID(i.id);
+        if (search.trim() === '') {
+            return true; 
+        }
+        return(
+            i.name.toLowerCase().includes(search.toLowerCase()) ||
+            i.id.toString().includes(search.toLowerCase())||
+            formattedDate.includes(search)
+         )
+});
+
+
     
   return (
     <div>
@@ -84,9 +120,14 @@ const FetchApi = () =>{
             value={search}
         />
          </div>
-         {records.length===0 ? (<p>No data in api</p>):(
 
-         <table className="tables">
+        
+         <button defaultValue={sortDirection} onClick={ascendingId}>Ascending</button>
+         <button onClick={handleSortChange}>Descending</button>
+         {/* {records.length===0 ? (<p>No data in api</p>):( */}
+
+         <table className="tables" >
+
             
             <thead>
                  <tr className='row'>
@@ -95,14 +136,17 @@ const FetchApi = () =>{
                     <th>City</th>
                     <th>Zipcode</th>
                     <th>Company</th>
+                    <th>Date</th>
                 </tr>
             </thead>
 
             <tbody className='table-body'>
-            <select defaultValue={sortDirection} onChange={handleSortChange}>
-            <option value={0}>Asscending</option>
+            {/* <select defaultValue={sortDirection} onChange={handleSortChange} >
+            <option value={0} onChange={ascendingId}>Asscending</option>
             <option value={1}>Descending</option>
-            </select>
+            </select> */}
+            
+            
             {filteredRecords && filteredRecords.length>0 && filteredRecords !== undefined ? filteredRecords
             //.sort((a,b)=>a.id>b.id ? 1:-1)
             .map((item) => (
@@ -112,18 +156,22 @@ const FetchApi = () =>{
                             <td>{item.address.city ? item.address.city:'-'}</td>
                             <td>{item.address.zipcode ? item.address.zipcode:'-'}</td>
                             <td>{item.company.name ? item.company.name:'-'}</td>
+                            <td>{getDateFromID(item.id)}</td>
                         </tr>
-                    )):"No data"}
+                    )):(
+                        <tr>
+                          <td colSpan="6">No data</td>
+                        </tr>
+                      )}
             </tbody>
          </table>
-         )}
 
+         
+         {/* )} */}
+        
 
         <button onClick={ascendingEvent}>Sort Ascending</button>
         <button onClick={descendingEvent}>Sort Descending</button>
-
-
-
 
     </div>
     
